@@ -44,7 +44,7 @@ class WatchScreen extends StatelessWidget {
 
 class TimerScreen extends StatefulWidget {
   // const TimerScreen({super.key});
-  
+
   final WearMode mode;
 
   const TimerScreen(this.mode, {super.key});
@@ -70,42 +70,43 @@ class _TimerScreenState extends State<TimerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: widget.mode == WearMode.active ? Colors.black : Colors.black,
+      backgroundColor:
+          widget.mode == WearMode.active ? Colors.black : Colors.black,
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Center(
-              child: Icon(
-                Icons.play_arrow,
-                color: widget.mode == WearMode.active ? Colors.white : Colors.grey,
-                size: 30, // Reemplaza WearMode.active por tu condición
-                shadows: [
-                    Shadow(
-                      blurRadius: 10.0,
-                      color: widget.mode == WearMode.active ? Colors.green :Color.fromARGB(0, 0, 0, 0),
-                      offset: Offset(2.0, 2.0),
-                    ),
-                  ],
-              ),
-            ),
+                child: _buildIcon(
+                    _status,
+                    widget.mode == WearMode.active
+                        ? Colors.white
+                        : Colors.grey)),
             const SizedBox(height: 4.0),
             Center(
               child: Text(
                 _strCount,
                 style: TextStyle(
-                  color: widget.mode == WearMode.active ? Colors.white : Colors.grey,
-                  fontFamily: 'RobotoMono', // Fuente monoespaciada para un toque futurista
-                  fontSize: 40.0, // Tamaño de fuente ajustado para mayor impacto
-                  fontWeight: FontWeight.bold, // Texto en negrita para mayor énfasis
+                  color: widget.mode == WearMode.active
+                      ? Colors.white
+                      : Colors.grey,
+                  fontFamily:
+                      'RobotoMono', // Fuente monoespaciada para un toque futurista
+                  fontSize:
+                      40.0, // Tamaño de fuente ajustado para mayor impacto
+                  fontWeight:
+                      FontWeight.bold, // Texto en negrita para mayor énfasis
                   shadows: [
                     Shadow(
                       blurRadius: 10.0,
-                      color: widget.mode == WearMode.active ? Colors.green : Color.fromARGB(0, 0, 0, 0),
+                      color: widget.mode == WearMode.active
+                          ? Colors.green
+                          : Color.fromARGB(0, 0, 0, 0),
                       offset: Offset(2.0, 2.0),
                     ),
                   ],
-                  letterSpacing: 2.0, // Espaciado entre letras para un aspecto más tecnológico
+                  letterSpacing:
+                      2.0, // Espaciado entre letras para un aspecto más tecnológico
                 ),
               ),
             ),
@@ -116,77 +117,94 @@ class _TimerScreenState extends State<TimerScreen> {
     );
   }
 
- Widget _buildWidgetButton() {
-  if (widget.mode == WearMode.active) {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.blueAccent, // Color de fondo del botón
-            foregroundColor: Colors.white, // Color del texto del botón
-            shadowColor: Colors.blue, // Color de la sombra del botón
-            elevation: 10, // Altura de la sombra del botón
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12), // Bordes redondeados del botón
+  Widget _buildWidgetButton() {
+    if (widget.mode == WearMode.active) {
+      return Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blueAccent, // Color de fondo del botón
+                foregroundColor: Colors.white, // Color del texto del botón
+                shadowColor: Colors.blue, // Color de la sombra del botón
+                elevation: 10, // Altura de la sombra del botón
+                shape: RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.circular(12), // Bordes redondeados del botón
+                ),
+                padding: EdgeInsets.symmetric(
+                    horizontal: 5, vertical: 5), // Espaciado interno del botón
+                textStyle: TextStyle(
+                  fontSize: 18, // Tamaño de la fuente del texto del botón
+                  fontWeight:
+                      FontWeight.bold, // Peso de la fuente del texto del botón
+                ),
+              ),
+              onPressed: () {
+                if (_status == "Start") {
+                  _startTimer();
+                } else if (_status == "Stop") {
+                  _timer.cancel();
+                  setState(() {
+                    _status = "Continue";
+                  });
+                } else if (_status == "Continue") {
+                  _startTimer();
+                }
+              },
+              child: _buildIcon(_status, Colors.white)),
+          SizedBox(width: 10),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.redAccent, // Color de fondo del botón
+              foregroundColor: Colors.white, // Color del texto del botón
+              shadowColor: Colors.red, // Color de la sombra del botón
+              elevation: 10, // Altura de la sombra del botón
+              shape: RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.circular(12), // Bordes redondeados del botón
+              ),
+              padding: EdgeInsets.symmetric(
+                  horizontal: 5, vertical: 5), // Espaciado interno del botón
+              textStyle: TextStyle(
+                fontSize: 18, // Tamaño de la fuente del texto del botón
+                fontWeight:
+                    FontWeight.bold, // Peso de la fuente del texto del botón
+              ),
             ),
-            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5), // Espaciado interno del botón
-            textStyle: TextStyle(
-              fontSize: 18, // Tamaño de la fuente del texto del botón
-              fontWeight: FontWeight.bold, // Peso de la fuente del texto del botón
-            ),
+            onPressed: () {
+              // ignore: unnecessary_null_comparison
+              if (_timer != null) {
+                _timer.cancel();
+                setState(() {
+                  _count = 0;
+                  _strCount = "00:00:00";
+                  _status = "Start";
+                });
+              }
+            },
+            child: const Icon(Icons.refresh),
           ),
-          onPressed: () {
-            if (_status == "Start") {
-              _startTimer();
-            } else if (_status == "Stop") {
-              _timer.cancel();
-              setState(() {
-                _status = "Continue";
-              });
-            } else if (_status == "Continue") {
-              _startTimer();
-            }
-          },
-          child: Text(_status),
-        ),
-        SizedBox(width: 10),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.redAccent, // Color de fondo del botón
-            foregroundColor: Colors.white, // Color del texto del botón
-            shadowColor: Colors.red, // Color de la sombra del botón
-            elevation: 10, // Altura de la sombra del botón
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12), // Bordes redondeados del botón
-            ),
-            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5), // Espaciado interno del botón
-            textStyle: TextStyle(
-              fontSize: 18, // Tamaño de la fuente del texto del botón
-              fontWeight: FontWeight.bold, // Peso de la fuente del texto del botón
-            ),
-          ),
-          onPressed: () {
-            // ignore: unnecessary_null_comparison
-            if (_timer != null) {
-              _timer.cancel();
-              setState(() {
-                _count = 0;
-                _strCount = "00:00:00";
-                _status = "Start";
-              });
-            }
-          },
-          child: const Text("Reset"),
-        ),
-      ],
-    );
-  } else {
-    return Container();
+        ],
+      );
+    } else {
+      return Container();
+    }
   }
-}
 
+  Icon _buildIcon(String status, Color color) {
+    Icon icon;
+
+    if (status == "Start") {
+      icon = const Icon(Icons.play_arrow);
+    } else if (status == "Stop") {
+      icon = const Icon(Icons.pause);
+    } else {
+      icon = const Icon(Icons.play_arrow);
+    }
+    return Icon(icon.icon, color: color);
+  }
 
   void _startTimer() {
     _status = "Stop";

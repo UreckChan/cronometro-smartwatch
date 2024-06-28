@@ -1,0 +1,25 @@
+{
+    // Use IntelliSense para saber los atributos posibles.
+    // Mantenga el puntero para ver las descripciones de los existentes atributos.
+    // Para más información, visite: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "cronometro-smartwatch",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "cronometro-smartwatch (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "cronometro-smartwatch (release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}
